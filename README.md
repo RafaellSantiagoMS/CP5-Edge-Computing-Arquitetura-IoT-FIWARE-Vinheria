@@ -110,7 +110,7 @@ O código principal do ESP32 encontra-se no arquivo /index.ino, responsável por
 
 ![Porta STH-Comet](./src/images/STH-Comet.png)
 ![Porta Orion](./src/images/Orion.png)
-![Porta Iot-Agent-MQTT](./src/images/Iot-20Agent-20MQTT.png)
+![Porta Iot-Agent-MQTT](./src/images/Iot-Agent-MQTT.png)
 
 
 
