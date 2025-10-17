@@ -28,3 +28,47 @@ PubSubClient MQTT(espClient);
 // ======= VARIÁVEIS GLOBAIS =======
 char EstadoSaida = '0';
 unsigned long lastMsg = 0; // Controle de tempo (para evitar delays)
+
+
+// ======= INICIALIZAÇÕES =======
+void initSerial() {
+  Serial.begin(115200);
+  Serial.println("Inicializando Serial...");
+}
+
+void initWiFi() {
+  Serial.println("Conectando ao Wi-Fi...");
+  WiFi.begin(SSID, PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("\nConectado ao Wi-Fi!");
+  Serial.print("IP: ");
+  Serial.println(WiFi.localIP());
+}
+
+void initMQTT() {
+  MQTT.setServer(BROKER_MQTT, BROKER_PORT);
+  MQTT.setCallback(mqtt_callback);
+}
+
+// ======= CALLBACK MQTT =======
+void mqtt_callback(char* topic, byte* payload, unsigned int length) {
+  String msg;
+  for (int i = 0; i < length; i++) msg += (char)payload[i];
+
+  Serial.print("Comando recebido em ");
+  Serial.print(topic);
+  Serial.print(": ");
+  Serial.println(msg);
+
+  if (msg.equalsIgnoreCase("on")) {
+    digitalWrite(LED_PIN, HIGH);
+    EstadoSaida = '1';
+  } else if (msg.equalsIgnoreCase("off")) {
+    digitalWrite(LED_PIN, LOW);
+    EstadoSaida = '0';
+  }
+}
+
