@@ -53,13 +53,14 @@ A solução utiliza um microcontrolador ESP32 como dispositivo IoT, responsável
 - ssh -i nome-da-chave.pem ubuntu@<IP-PUBLICO-DA-EC2>
 
 2. Instalar FIWARE
-
+  - git clone https://github.com/fabiocabrini/fiware
   - sudo apt update
   - sudo apt install docker.io 
   - sudo apt install docker-compose
   - ls fiware
   - cd fiware
   - sudo docker-compose up -d
+
 ```
 **Observação: O diretório fiware já contém o docker-compose configurado com os containers necessários e portas abertas.**
 
