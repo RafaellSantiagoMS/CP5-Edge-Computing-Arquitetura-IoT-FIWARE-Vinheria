@@ -104,3 +104,51 @@ void VerificaConexoesWiFIEMQTT() {
   reconectWiFi();
   if (!MQTT.connected()) reconnectMQTT();
 }
+
+// ======= PUBLICAÇÕES =======
+void EnviaEstadoOutputMQTT() {
+  if (EstadoSaida == '1') {
+    MQTT.publish(TOPICO_PUBLISH_1, "s|on");
+    Serial.println("LED ligado (enviado ao broker)");
+  } else {
+    MQTT.publish(TOPICO_PUBLISH_1, "s|off");
+    Serial.println("LED desligado (enviado ao broker)");
+  }
+}
+
+void handleSensores() {
+  // Luminosidade (potenciômetro simulando)
+  int potLum = analogRead(34);
+  int luminosity = map(potLum, 0, 4095, 0, 100);
+  MQTT.publish(TOPICO_PUBLISH_L, String("l|" + String(luminosity)).c_str());
+  Serial.printf("Luminosidade: %d\n", luminosity);
+
+  // Temperatura e Umidade
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  if (!isnan(h) && !isnan(t)) {
+    MQTT.publish(TOPICO_PUBLISH_H, String("h|" + String(h)).c_str());
+    MQTT.publish(TOPICO_PUBLISH_T, String("t|" + String(t)).c_str());
+    Serial.printf("Umidade: %.2f %% | Temperatura: %.2f °C\n", h, t);
+  } else {
+    Serial.println("Erro ao ler DHT22!");
+  }
+
+  // Alagamento (potenciômetro simulando)
+  int potAlag = analogRead(35);
+  int alag = map(potAlag, 0, 4095, 0, 100);
+  MQTT.publish(TOPICO_PUBLISH_ALAG, String("alagamento|" + String(alag)).c_str());
+  Serial.printf("Alagamento: %d\n", alag);
+}
+
+// ======= INICIALIZAÇÃO DO LED =======
+void InitOutput() {
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(LED_PIN, HIGH);
+    delay(200);
+    digitalWrite(LED_PIN, LOW);
+    delay(200);
+  }
+}
