@@ -72,3 +72,35 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   }
 }
 
+// ======= CONEXÕES =======
+void reconectWiFi() {
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Reconectando Wi-Fi...");
+    WiFi.begin(SSID, PASSWORD);
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(1000);
+      Serial.print(".");
+    }
+    Serial.println("\nReconectado ao Wi-Fi!");
+  }
+}
+
+void reconnectMQTT() {
+  while (!MQTT.connected()) {
+    Serial.print("Conectando ao broker MQTT em ");
+    Serial.print(BROKER_MQTT);
+    Serial.println(" ...");
+    if (MQTT.connect(ID_MQTT)) {
+      Serial.println("Conectado ao broker!");
+      MQTT.subscribe(TOPICO_SUBSCRIBE);
+    } else {
+      Serial.println("Falha na conexão. Tentando novamente em 2s...");
+      delay(2000);
+    }
+  }
+}
+
+void VerificaConexoesWiFIEMQTT() {
+  reconectWiFi();
+  if (!MQTT.connected()) reconnectMQTT();
+}
