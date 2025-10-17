@@ -104,7 +104,7 @@ O código principal do ESP32 encontra-se no arquivo /index.ino, responsável por
 `Prints da conexão da maquina virtual ao postman`
 
 **Requisitos necessários para aplicação**
-- IP público da máquina virtual na URL [54.233.36.41]
+- IP público da máquina virtual na URL
 - Verificar se as portas estão abertas e recebendo os dados
 - Se der 200 OK , está tudo certo
 
