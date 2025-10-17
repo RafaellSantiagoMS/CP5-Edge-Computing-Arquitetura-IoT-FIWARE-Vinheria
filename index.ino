@@ -152,3 +152,25 @@ void InitOutput() {
     delay(200);
   }
 }
+
+// ======= SETUP =======
+void setup() {
+  initSerial();
+  InitOutput();
+  initWiFi();
+  initMQTT();
+  dht.begin();
+}
+
+// ======= LOOP PRINCIPAL =======
+void loop() {
+  VerificaConexoesWiFIEMQTT();
+  MQTT.loop();
+
+  unsigned long now = millis();
+  if (now - lastMsg > 10000) { // Envia a cada 10 segundos
+    lastMsg = now;
+    EnviaEstadoOutputMQTT();
+    handleSensores();
+  }
+}
